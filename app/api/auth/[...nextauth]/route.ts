@@ -1,38 +1,73 @@
 export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs'; // <-- ADD THIS
-import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
+export const runtime = 'nodejs';
+
 import { prisma } from "../../../../lib/prisma";
 import bcrypt from "bcryptjs";
 
-const handler = NextAuth({
-  providers: [
-    CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" }
-      },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
+function normalizeAuthUrl(value?: string) {
+  if (!value) return undefined;
 
-        // Find the user in SQL
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email }
-        });
+  let cleaned = value.trim().replace(/^\[|\]$/g, "");
 
-        if (!user) return null;
+  while (/^https?:\/\//i.test(cleaned)) {
+    cleaned = cleaned.replace(/^https?:\/\//i, "");
+  }
 
-        // Check if password matches
-        const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
-        if (!isPasswordValid) return null;
+  const withoutTrailingSlash = cleaned.replace(/\/+$/, "");
 
-        return { id: user.id, name: user.name, email: user.email };
-      }
-    })
-  ],
-  session: { strategy: "jwt" },
-  secret: process.env.NEXTAUTH_SECRET,
-});
+  return withoutTrailingSlash ? `https://${withoutTrailingSlash}` : undefined;
+}
 
-export { handler as GET, handler as POST };
+async function createAuthHandler() {
+  const normalizedUrl = normalizeAuthUrl(
+    process.env.NEXTAUTH_URL ?? process.env.URL ?? process.env.VERCEL_URL
+  );
+
+  if (normalizedUrl) {
+    process.env.NEXTAUTH_URL = normalizedUrl;
+  }
+
+  const { default: NextAuth } = await import("next-auth");
+  const { default: CredentialsProvider } = await import("next-auth/providers/credentials");
+
+  return NextAuth({
+    providers: [
+      CredentialsProvider({
+        name: "Credentials",
+        credentials: {
+          email: { label: "Email", type: "email" },
+          password: { label: "Password", type: "password" }
+        },
+        async authorize(credentials) {
+          if (!credentials?.email || !credentials?.password) return null;
+
+          const user = await prisma.user.findUnique({
+            where: { email: credentials.email }
+          });
+
+          if (!user) return null;
+
+          const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
+          if (!isPasswordValid) return null;
+
+          return { id: user.id, name: user.name, email: user.email };
+        }
+      })
+    ],
+    session: { strategy: "jwt" },
+    secret: process.env.NEXTAUTH_SECRET,
+    pages: {
+      signIn: "/",
+    },
+  });
+}
+
+export async function GET(request: Request, context: unknown) {
+  const handler = await createAuthHandler();
+  return handler(request, context as never);
+}
+
+export async function POST(request: Request, context: unknown) {
+  const handler = await createAuthHandler();
+  return handler(request, context as never);
+}
