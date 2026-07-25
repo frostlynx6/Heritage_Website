@@ -33,7 +33,6 @@ const adapter = new PrismaMariaDb({
   connectionLimit: 1,
   acquireTimeout: 10000,
   connectTimeout: 10000,
-  keepAliveInitialDelay: 10000,
 });
 
 export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter });
