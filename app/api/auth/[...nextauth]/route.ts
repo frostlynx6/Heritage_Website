@@ -30,7 +30,13 @@ function normalizeAuthUrl(value?: string) {
 
 async function createAuthHandler() {
   const normalizedUrl = normalizeAuthUrl(
-    process.env.NEXTAUTH_URL ?? process.env.URL ?? process.env.VERCEL_URL ?? process.env.NETLIFY_URL
+    process.env.NEXTAUTH_URL
+    ?? process.env.URL
+    ?? process.env.SITE_URL
+    ?? process.env.DEPLOY_PRIME_URL
+    ?? process.env.DEPLOY_URL
+    ?? process.env.VERCEL_URL
+    ?? process.env.NETLIFY_URL
   );
 
   if (normalizedUrl) {
