@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 
+// Ensure Node.js runtime so Netlify Functions expose env vars reliably
+export const runtime = "nodejs";
+
 function isValidEmail(email: string) {
   return /.+@.+\..+/.test(email);
 }
