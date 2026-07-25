@@ -1,5 +1,6 @@
 "use client";
 import { Map, Train, Info as InfoIcon } from "lucide-react";
+import { motion } from "framer-motion";
 import { useLanguage } from "../../components/LanguageContext";
 
 export default function Information() {
@@ -15,7 +16,13 @@ export default function Information() {
         <div className="grid md:grid-cols-2 gap-8">
           
           {/* Map Section */}
-          <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+          <motion.div 
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100"
+          >
             <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
               <Map className="w-6 h-6 text-emerald-600" />
               {t.overviewMapTitle}
@@ -30,10 +37,16 @@ export default function Information() {
             <p className="text-gray-500 text-sm mt-4">
               {t.overviewMapDesc}
             </p>
-          </div>
+          </motion.div>
 
           {/* MRT Section */}
-          <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+          <motion.div 
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.4, delay: 0.08, ease: "easeOut" }}
+            className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100"
+          >
             <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
               <Train className="w-6 h-6 text-emerald-600" />
               {t.mrtMapTitle}
@@ -48,7 +61,7 @@ export default function Information() {
             <p className="text-gray-500 text-sm mt-4">
               {t.mrtMapDesc}
             </p>
-          </div>
+          </motion.div>
 
         </div>
       </div>
