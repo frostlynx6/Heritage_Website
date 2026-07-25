@@ -19,7 +19,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid email" }, { status: 400 });
     }
 
-    const webhook = process.env.DISCORD_WEBHOOK_URL;
+    // Preferred: server-only secret; Fallback: public var (exposes webhook to clients)
+    const webhook = process.env.DISCORD_WEBHOOK_URL || process.env.NEXT_PUBLIC_DISCORD_WEBHOOK_URL;
     if (!webhook) {
       return NextResponse.json({ error: "Webhook not configured" }, { status: 500 });
     }
