@@ -11,11 +11,13 @@ if (!dbUrl) {
 
 const parsed = new URL(dbUrl);
 const sslaccept = parsed.searchParams.get('sslaccept');
-const ssl = sslaccept
-  ? sslaccept.toLowerCase() === 'strict'
-    ? { rejectUnauthorized: true }
-    : true
-  : undefined;
+let ssl: any = undefined;
+if (sslaccept) {
+  ssl = sslaccept.toLowerCase() === 'strict' ? { rejectUnauthorized: true } : true;
+} else if (/tidbcloud\.com$/i.test(parsed.hostname)) {
+  // TiDB Cloud requires TLS; default to strict if not explicitly provided
+  ssl = { rejectUnauthorized: true };
+}
 
 const adapter = new PrismaMariaDb({
   host: parsed.hostname,
@@ -24,6 +26,7 @@ const adapter = new PrismaMariaDb({
   password: decodeURIComponent(parsed.password),
   database: parsed.pathname.replace(/^\//, '') || undefined,
   ssl,
+  connectionLimit: 1,
 });
 
 export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter });

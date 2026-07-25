@@ -4,7 +4,9 @@ export const runtime = 'nodejs';
 import { NextResponse } from 'next/server';
 import { prisma } from '../../../../lib/prisma';
 
-export async function GET() {
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const verbose = url.searchParams.get('debug') === '1';
   const hasEnv = Boolean(process.env.DATABASE_URL);
   const isDev = process.env.NODE_ENV !== 'production';
   let canConnect = false;
@@ -36,9 +38,18 @@ export async function GET() {
     hasUserTable,
   };
 
-  if (isDev) {
+  if (isDev || verbose) {
     body.detail = String((error as any)?.message ?? error ?? '');
-    body.databaseUrlSampled = hasEnv ? (process.env.DATABASE_URL?.slice(0, 20) + '...') : undefined;
+    if (hasEnv) {
+      try {
+        const parsed = new URL(process.env.DATABASE_URL as string);
+        body.databaseHost = parsed.hostname;
+        body.databasePort = parsed.port;
+        body.databaseUrlSampled = (process.env.DATABASE_URL as string).slice(0, 25) + '...';
+      } catch {}
+    }
+    body.node = process.version;
+    body.adapter = 'mariadb';
   }
 
   return NextResponse.json(body, { status: body.ok ? 200 : 500 });
