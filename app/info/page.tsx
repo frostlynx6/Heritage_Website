@@ -1,6 +1,8 @@
 "use client";
 import { Map, Train, Info as InfoIcon } from "lucide-react";
 import { motion } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
 import { useLanguage } from "../../components/LanguageContext";
 
 export default function Information() {
@@ -27,13 +29,18 @@ export default function Information() {
               <Map className="w-6 h-6 text-emerald-600" />
               {t.overviewMapTitle}
             </h2>
-            <div className="rounded-2xl overflow-hidden bg-gray-100">
-              <img 
-                src="https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcTe2jhZid2hUC_rqQUwfQMUFnBxbyF5HfwXBDAHYrura7J3hNabRQAclpKFV3CZFheKbCkV9pzDpbDYwcY" 
-                alt="Singapore Map Overview" 
-                className="w-full h-auto object-cover hover:scale-105 transition duration-500"
-              />
-            </div>
+            <Link href="/info/map" className="block group">
+              <div className="rounded-2xl overflow-hidden bg-gray-100">
+                <Image 
+                  src="/images/SG-EPS-01-0001.png"
+                  alt="Singapore Map Overview"
+                  width={1600}
+                  height={1000}
+                  className="w-full h-auto object-cover group-hover:scale-105 transition duration-500"
+                  priority
+                />
+              </div>
+            </Link>
             <p className="text-gray-500 text-sm mt-4">
               {t.overviewMapDesc}
             </p>
@@ -51,13 +58,15 @@ export default function Information() {
               <Train className="w-6 h-6 text-emerald-600" />
               {t.mrtMapTitle}
             </h2>
-            <div className="rounded-2xl overflow-hidden bg-gray-100">
-              <img 
-                src="https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcSVb7_zudSRvGJDa9aTg2uksJjkB_3LU6vnHnmOS07HJQjorrN46HaORrO2u2yW6oK0FB6-9ADj1h0obiM" 
-                alt="Singapore MRT Route Map" 
-                className="w-full h-auto object-cover hover:scale-105 transition duration-500"
-              />
-            </div>
+            <Link href="/info/mrt" className="block group">
+              <div className="rounded-2xl overflow-hidden bg-gray-100">
+                <img 
+                  src="https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcSVb7_zudSRvGJDa9aTg2uksJjkB_3LU6vnHnmOS07HJQjorrN46HaORrO2u2yW6oK0FB6-9ADj1h0obiM" 
+                  alt="Singapore MRT Route Map" 
+                  className="w-full h-auto object-cover group-hover:scale-105 transition duration-500"
+                />
+              </div>
+            </Link>
             <p className="text-gray-500 text-sm mt-4">
               {t.mrtMapDesc}
             </p>
