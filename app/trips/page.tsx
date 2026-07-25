@@ -44,7 +44,7 @@ const ALL_TRIPS: Trip[] = [
       ZH: "作为新加坡首个东盟遗产公园，双溪布洛湿地保护区是候鸟的重要中转站。漫步在郁郁葱葱的红树林栈道上，可观赏弹涂鱼、巨蜥、翠鸟及河口鳄等野生动物。",
     },
     duration: "2 - 3 Hours",
-    image: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80",
+    image: "/images/trips/sungei-buloh.jpg",
     highlights: {
       EN: ["Migratory Bird Watching", "Mangrove Boardwalks", "Observation Pods", "Biodiversity Trail"],
       ZH: ["观赏候鸟", "红树林栈道", "观景舱", "生物多样性步道"],

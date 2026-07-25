@@ -77,10 +77,10 @@ export const translations = {
     navHome: "首页",
     navTrips: "可选行程",
     navMyTrips: "我的行程",
-    navInfo: "信息",
+    navInfo: "更多信息",
     navLogin: "登录 / 注册",
     heroTitle1: "探索新加坡的",
-    heroTitle2: "活态遗产",
+    heroTitle2: "文化遗产",
     heroDesc: "踏上精心策划的路线，收集专属徽章，揭开狮城背后的隐藏故事。",
     startExploring: "开始探索",
 
@@ -99,11 +99,11 @@ export const translations = {
     catMuseums: "博物馆与历史",
 
     // Trips page
-    curatedPill: "新加坡遗产精选路线",
+    curatedPill: "新加坡精选路线",
     tripsTitle: "可选行程",
-    tripsSubtitle: "探索新加坡 10 处代表性目的地。标记你的到访以解锁专属徽章！",
+    tripsSubtitle: "探索新加坡代表性目的地。标记你的到访以解锁专属徽章！",
     attendedCounterLabel: "已到访地点",
-    viewDetails: "查看详情与亮点",
+    viewDetails: "查看详情并亮点",
     aboutThisLocation: "关于此地点",
     keyHighlights: "亮点",
     markAsAttended: "标记为已到访",
