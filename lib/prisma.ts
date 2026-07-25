@@ -1,7 +1,11 @@
 import { PrismaClient } from '@prisma/client';
+import { setDefaultResultOrder } from 'node:dns';
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 
 // Use a simple singleton to avoid recursive proxy traps and stack overflows
+// Prefer IPv4 to avoid IPv6-first resolution issues on some serverless hosts
+try { setDefaultResultOrder('ipv4first'); } catch {}
+
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
 const dbUrl = process.env.DATABASE_URL;
@@ -27,6 +31,11 @@ const adapter = new PrismaMariaDb({
   database: parsed.pathname.replace(/^\//, '') || undefined,
   ssl,
   connectionLimit: 1,
+  acquireTimeout: 10000,
+  connectTimeout: 10000,
+  socketTimeout: 15000,
+  enableKeepAlive: true,
+  keepAliveInitialDelay: 10000,
 });
 
 export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter });
