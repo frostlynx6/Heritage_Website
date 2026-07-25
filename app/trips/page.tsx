@@ -63,7 +63,7 @@ const ALL_TRIPS: Trip[] = [
       ZH: "铁路走廊北起兀兰，南至丹戎巴葛，串联起社区空间与生态绿廊。徜徉于修复的钢桁架桥，漫步旧时车站与林荫步道。",
     },
     duration: "2 - 4 Hours",
-    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+    image: "/images/trips/rail-corridor.jpg",
     highlights: {
       EN: ["Historic Truss Bridges", "Bukit Timah Railway Station", "Clementi Forest Views", "Eco-Link Connector"],
       ZH: ["历史钢桁架桥", "武吉知马火车站", "金文泰森林景观", "生态连桥"],
@@ -76,7 +76,7 @@ const ALL_TRIPS: Trip[] = [
     shortDesc: { EN: "Conquer Singapore's highest hill and wander through pristine primary rainforest.", ZH: "攀登新加坡最高丘陵，漫步原始热带雨林。" },
     fullDesc: { EN: "Home to Singapore's highest natural peak (163m), Bukit Timah Nature Reserve holds one of the richest ecosystems in the world per hectare. Challenge yourself on steep stair trails surrounded by towering dipterocarp trees and ancient granite quarries.", ZH: "这里拥有新加坡最高的自然坡峰（163 米），单位面积生态多样性位居前列。沿陡峭阶梯穿越高大龙脑香科树林与古老花岗岩采石场。" },
     duration: "2 - 3 Hours",
-    image: "https://images.unsplash.com/photo-1511497584788-8767611136f6?auto=format&fit=crop&w=1200&q=80",
+    image: "/images/trips/bukit-timah.jpg",
     highlights: { EN: ["Summit Peak (163m)", "Hindhede Quarry", "Primary Rainforest", "Rich Flora & Fauna"], ZH: ["山顶（163 米）", "欣德希德采石场", "原始雨林", "丰富动植物"] }
   },
   {
@@ -86,17 +86,17 @@ const ALL_TRIPS: Trip[] = [
     shortDesc: { EN: "Step back in time to 1960s Singapore with rustic kampong villages and coastal wetlands.", ZH: "回到 20 世纪 60 年代的新加坡，感受朴实甘榜与海岸湿地。" },
     fullDesc: { EN: "A short bumboat ride from Changi Point Ferry Terminal, Pulau Ubin offers a glimpse into Singapore's rural past. Cycle along dirt paths under rubber plantations, visit authentic wooden kampongs, and explore the unique intertidal eco-system at Chek Jawa Wetlands.", ZH: "从樟宜码头乘舢板片刻即达，这里展现新加坡的乡野旧貌。骑行穿过橡胶林土路，走进传统木屋甘榜，并探访切爪哇独特的潮间带生态。" },
     duration: "Half Day",
-    image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80",
+    image: "/images/trips/pulau-ubin.jpg",
     highlights: { EN: ["Chek Jawa Wetlands", "Kampong Life", "Bumboat Ride", "Pekan Quarry"], ZH: ["切爪哇湿地", "甘榜生活", "舢板船", "碧江采石场"] }
   },
   {
     id: "southern-islands",
-    name: { EN: "Southern Islands", ZH: "南部海岛" },
+    name: { EN: "Southern Islands", ZH: "南部岛屿" },
     category: "Nature",
     shortDesc: { EN: "Island hop across St. John's, Lazarus, and Kusu Islands for pristine beaches and coastal heritage.", ZH: "穿梭圣约翰、拉撒路与龟屿，享受原生态海滩与海岸遗产。" },
     fullDesc: { EN: "Escape the city bustle to Singapore's idyllic southern archipelago. Relax on turquoise bay beaches at Lazarus Island, explore marine conservation centers on St. John's Island, and visit historic sacred shrines and temples on Kusu Island.", ZH: "远离闹市，走进恬静的南部海岛。拉撒路岛碧湾沙滩适合休憩，圣约翰岛可了解海洋保育，龟屿则有历史悠久的庙宇与圣地。" },
     duration: "Full Day",
-    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+    image: "/images/trips/southern-islands.jpg",
     highlights: { EN: ["Lazarus Beach Lagoon", "Marine Park Outreach", "Kusu Da Bo Gong Temple", "Island Hopping"], ZH: ["拉撒路泻湖海滩", "海洋公园教育", "龟屿大伯公庙", "跳岛之旅"] }
   },
   {
@@ -106,7 +106,7 @@ const ALL_TRIPS: Trip[] = [
     shortDesc: { EN: "Explore world-renowned modern architecture including 'The Hive' and the iconic ADM building.", ZH: "探索世界知名的现代建筑，包括“蜂巢”与标志性的 ADM 大楼。" },
     fullDesc: { EN: "NTU is not only a top global university but also a landmark of world-class sustainable architecture. Marvel at 'The Hive' (famously nicknamed the Dim Sum Basket) designed by Heatherwick Studio, walk across the turf-roofed School of Art, Design and Media, and visit the Chinese Heritage Centre.", ZH: "南大既是顶尖学府，也以可持续建筑著称。欣赏赫斯维克工作室设计的“蜂巢”，漫步草皮屋顶的艺术设计与媒体学院，并参观华裔馆。" },
     duration: "2 - 3 Hours",
-    image: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1200&q=80",
+    image: "/images/trips/ntu.jpg",
     highlights: { EN: ["The Hive (Heatherwick Studio)", "ADM Grass Roof Building", "Yunnan Garden", "Chinese Heritage Centre"], ZH: ["蜂巢（赫斯维克）", "ADM 草皮屋顶", "云南园", "华裔馆"] }
   },
   {
@@ -116,7 +116,7 @@ const ALL_TRIPS: Trip[] = [
     shortDesc: { EN: "Trace the history and aviation feats of the Republic of Singapore Air Force (RSAF).", ZH: "探索新加坡空军（RSAF）的历史与飞航成就。" },
     fullDesc: { EN: "Located next to Paya Lebar Air Base, the Air Force Museum blends physical aviation heritage with interactive displays. Walk through outdoor static displays featuring historic jet fighters, tactical helicopters, and anti-aircraft missiles that defended Singapore's skies.", ZH: "毗邻巴耶利峇空军基地，博物馆结合实物航空遗产与互动展陈。室外静态展出多款历史战机、直升机与防空导弹。" },
     duration: "1.5 - 2 Hours",
-    image: "https://images.unsplash.com/photo-1519074069444-1ba4eae287b6?auto=format&fit=crop&w=1200&q=80",
+    image: "/images/trips/airforce-museum.jpg",
     highlights: { EN: ["Outdoor Aircraft Gallery", "Flight Simulators", "Historic Jet Fighters", "RSAF Heritage Displays"], ZH: ["室外飞机展区", "飞行模拟", "历史喷气战机", "空军遗产展示"] }
   },
   {
@@ -126,17 +126,17 @@ const ALL_TRIPS: Trip[] = [
     shortDesc: { EN: "Uncover Singapore's maritime defence heritage and the operational journey of the RSN.", ZH: "了解新加坡海军的发展历程与海防遗产。" },
     fullDesc: { EN: "Situated at Changi Naval Base, the Navy Museum details how the Republic of Singapore Navy transformed from two wooden boats into a sophisticated modern maritime force. Discover submarine simulators, historic ship weaponry, and naval strategy exhibits.", ZH: "位于樟宜海军基地，博物馆讲述新加坡海军从两艘木船成长为现代海上力量的历程。可体验潜艇模拟、了解舰艇武器与海军战略。" },
     duration: "1.5 - 2 Hours",
-    image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
+    image: "/images/trips/navy-museum.jpg",
     highlights: { EN: ["Submarine Simulator", "Maritime Defence Exhibits", "Naval Guns & Missiles", "Interactive Ship Deck"], ZH: ["潜艇模拟", "海防展陈", "舰炮与导弹", "互动甲板"] }
   },
   {
     id: "coney-island",
-    name: { EN: "Coney Island Park", ZH: "康尼岛公园" },
+    name: { EN: "Coney Island Park", ZH: "科尼岛公园" },
     category: "Nature",
     shortDesc: { EN: "A rustic coastal sanctuary featuring tall Casuarina trees, hidden beaches, and bird hides.", ZH: "质朴的海岸净地，高大的木麻黄林、隐秘海滩与观鸟屋。" },
     fullDesc: { EN: "Nestled off the coast of Punggol, Coney Island Park retains its wild charm with coastal forests, mangroves, and grasslands. Cycle along gravel trails, spot rare migratory birds from timber hides, and discover secluded sandy beaches along the Serangoon Reservoir.", ZH: "位于榜鹅海岸外，康尼岛保留了野趣：有海岸林、红树林与草地。骑行碎石道、在木质隐蔽处观赏候鸟，并探访宁静沙滩。" },
     duration: "2 - 3 Hours",
-    image: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80",
+    image: "/images/trips/coney-island.jpg",
     highlights: { EN: ["Casuarina Woodlands", "Coastal Boardwalks", "Bird Watching Hides", "Eco-friendly Park Architecture"], ZH: ["木麻黄林地", "海岸步道", "观鸟屋", "生态友好公园建筑"] }
   },
   {
@@ -146,7 +146,7 @@ const ALL_TRIPS: Trip[] = [
     shortDesc: { EN: "Singapore's first UNESCO World Heritage Site featuring tropical flora and the National Orchid Garden.", ZH: "新加坡首个联合国教科文组织世界遗产，热带植物与国家胡姬园闻名遐迩。" },
     fullDesc: { EN: "Established in 1859, this 82-hectare botanical sanctuary is a masterpiece of landscape design. Stroll past historic gazebos, feed swans at Symphony Lake, and marvel at thousands of rare orchid hybrids inside the famous National Orchid Garden.", ZH: "始建于 1859 年，占地 82 公顷，是园林设计杰作。漫步历史凉亭、在交响乐湖观赏天鹅，并于胡姬园欣赏成千上万的珍稀兰花。" },
     duration: "2 - 4 Hours",
-    image: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1200&q=80",
+    image: "/images/trips/botanic-gardens.jpg",
     highlights: { EN: ["UNESCO Heritage Site", "National Orchid Garden", "The Bandstand Gazebo", "Symphony Lake"], ZH: ["联合国教科文组织世界遗产", "国家胡姬园", "乐台凉亭", "交响乐湖"] }
   }
 ];
