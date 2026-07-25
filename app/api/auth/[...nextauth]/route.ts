@@ -7,20 +7,30 @@ import bcrypt from "bcryptjs";
 function normalizeAuthUrl(value?: string) {
   if (!value) return undefined;
 
-  let cleaned = value.trim().replace(/^\[|\]$/g, "");
+  let cleaned = value.trim();
+
+  try {
+    const parsed = new URL(cleaned);
+    return parsed.origin;
+  } catch {
+    // fall through to normalization
+  }
+
+  cleaned = cleaned.replace(/^\[+|\]+$/g, "");
 
   while (/^https?:\/\//i.test(cleaned)) {
     cleaned = cleaned.replace(/^https?:\/\//i, "");
   }
 
   const withoutTrailingSlash = cleaned.replace(/\/+$/, "");
+  const host = withoutTrailingSlash.split(/[/?#]/)[0];
 
-  return withoutTrailingSlash ? `https://${withoutTrailingSlash}` : undefined;
+  return host ? `https://${host}` : undefined;
 }
 
 async function createAuthHandler() {
   const normalizedUrl = normalizeAuthUrl(
-    process.env.NEXTAUTH_URL ?? process.env.URL ?? process.env.VERCEL_URL
+    process.env.NEXTAUTH_URL ?? process.env.URL ?? process.env.VERCEL_URL ?? process.env.NETLIFY_URL
   );
 
   if (normalizedUrl) {
