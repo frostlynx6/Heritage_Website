@@ -1,14 +1,8 @@
 "use client";
-import dynamic from "next/dynamic";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import "leaflet/dist/leaflet.css";
-
-const MapContainer = dynamic(() => import("react-leaflet").then(m => m.MapContainer), { ssr: false });
-const TileLayer = dynamic(() => import("react-leaflet").then(m => m.TileLayer), { ssr: false });
-const CircleMarker = dynamic(() => import("react-leaflet").then(m => m.CircleMarker), { ssr: false });
-const Popup = dynamic(() => import("react-leaflet").then(m => m.Popup), { ssr: false });
 
 interface MarkerData {
   id: string;
@@ -19,6 +13,9 @@ interface MarkerData {
 }
 
 export default function SingaporeMapPage() {
+  const mapEl = useRef<HTMLDivElement | null>(null);
+  const mapRef = useRef<any>(null);
+
   const markers: MarkerData[] = useMemo(() => ([
     { id: "sungei-buloh", name: "Sungei Buloh Wetland Reserve", lat: 1.445, lng: 103.729, blurb: "Mangroves & migratory birds." },
     { id: "rail-corridor", name: "Rail Corridor (Bukit Timah)", lat: 1.339, lng: 103.786, blurb: "Historic truss bridges & green trail." },
@@ -32,7 +29,41 @@ export default function SingaporeMapPage() {
     { id: "botanic-gardens", name: "Singapore Botanic Gardens", lat: 1.3138, lng: 103.8159, blurb: "UNESCO World Heritage Site." },
   ]), []);
 
-  const center: [number, number] = [1.3521, 103.8198];
+  useEffect(() => {
+    let destroyed = false;
+    async function init() {
+      const L = await import("leaflet");
+      if (destroyed || !mapEl.current || mapRef.current) return;
+      const center: [number, number] = [1.3521, 103.8198];
+      const map = L.map(mapEl.current).setView(center, 11);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap contributors",
+      }).addTo(map);
+      markers.forEach((m) => {
+        const marker = L.circleMarker([m.lat, m.lng], {
+          radius: 8,
+          color: "#0ea5e9",
+          fillColor: "#10b981",
+          fillOpacity: 0.9,
+          weight: 2,
+        }).addTo(map);
+        marker.bindPopup(`
+          <div style="font-weight:700;color:#0f172a;margin-bottom:2px;">${m.name}</div>
+          <div style="color:#475569;font-size:12px;margin-bottom:6px;">${m.blurb}</div>
+          <a href="/trips" style="color:#047857;font-weight:600;font-size:12px;text-decoration:underline;">View in Trips</a>
+        `);
+      });
+      mapRef.current = map;
+    }
+    init();
+    return () => {
+      destroyed = true;
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+    };
+  }, [markers]);
 
   return (
     <div className="min-h-screen bg-slate-50 py-8 px-6">
@@ -46,23 +77,7 @@ export default function SingaporeMapPage() {
           <h1 className="text-2xl font-extrabold text-slate-900 mb-3">Singapore Interactive Map</h1>
           <p className="text-slate-500 text-sm mb-4">Explore the 10 featured locations. Click pins for details.</p>
           <div className="rounded-xl overflow-hidden">
-            <MapContainer center={center} zoom={11} scrollWheelZoom className="h-[70vh] w-full">
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution="&copy; OpenStreetMap contributors"
-              />
-              {markers.map(m => (
-                <CircleMarker key={m.id} center={[m.lat, m.lng]} radius={8} pathOptions={{ color: '#0ea5e9', fillColor: '#10b981', fillOpacity: 0.9 }}>
-                  <Popup>
-                    <div className="space-y-1">
-                      <div className="font-bold text-slate-900">{m.name}</div>
-                      <div className="text-slate-600 text-sm">{m.blurb}</div>
-                      <Link href="/trips" className="text-emerald-700 text-sm font-semibold hover:underline">View in Trips</Link>
-                    </div>
-                  </Popup>
-                </CircleMarker>
-              ))}
-            </MapContainer>
+            <div ref={mapEl} className="h-[70vh] w-full" />
           </div>
         </div>
       </div>
