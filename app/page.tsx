@@ -1,11 +1,46 @@
 "use client";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Compass, Award, Map } from "lucide-react";
+import { Compass, Award, Map, Send } from "lucide-react";
+import { useState } from "react";
 import { useLanguage } from "../components/LanguageContext";
 
 export default function Home() {
   const { t } = useLanguage();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [result, setResult] = useState<null | { ok: boolean; error?: string }>(null);
+
+  const remaining = 500 - message.length;
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
+    setResult(null);
+    try {
+      const res = await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message }),
+      });
+      if (res.ok) {
+        setResult({ ok: true });
+        setName("");
+        setEmail("");
+        setMessage("");
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setResult({ ok: false, error: data?.error || "Failed to send" });
+      }
+    } catch (e) {
+      setResult({ ok: false, error: "Network error" });
+    } finally {
+      setSubmitting(false);
+    }
+  };
   return (
     <main className="flex-1 flex flex-col">
       {/* Hero Section */}
@@ -90,6 +125,92 @@ export default function Home() {
               <p className="text-gray-600 leading-relaxed font-medium">{feature.desc}</p>
             </motion.div>
           ))}
+        </div>
+      </section>
+
+      {/* Feedback Section */}
+      <section className="py-20 bg-slate-50 border-t border-slate-100">
+        <div className="max-w-3xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200/80"
+          >
+            <div className="flex items-start gap-4 mb-6">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                <Send className="w-6 h-6" />
+              </div>
+              <div>
+                <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">{t.feedbackTitle}</h2>
+                <p className="text-slate-500 mt-1">{t.feedbackDesc}</p>
+              </div>
+            </div>
+
+            {result?.ok && (
+              <div className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-700 text-sm font-medium">
+                {t.feedbackSuccess}
+              </div>
+            )}
+            {result && !result.ok && (
+              <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-100 text-red-700 text-sm font-medium">
+                {result.error || t.feedbackError}
+              </div>
+            )}
+
+            <form onSubmit={onSubmit} className="space-y-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1">{t.nameLabel}</label>
+                  <input
+                    type="text"
+                    required
+                    value={name}
+                    onChange={(e) => setName(e.target.value.slice(0, 100))}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500"
+                    placeholder={t.namePlaceholder}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1">{t.emailLabel}</label>
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value.slice(0, 200))}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500"
+                    placeholder={t.emailPlaceholder}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-sm font-semibold text-slate-700">{t.messageLabel}</label>
+                  <span className={`text-xs ${remaining < 50 ? "text-amber-600" : "text-slate-400"}`}>{remaining} {t.charsLeft}</span>
+                </div>
+                <textarea
+                  required
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value.slice(0, 500))}
+                  maxLength={500}
+                  rows={5}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500"
+                  placeholder={t.messagePlaceholder}
+                />
+              </div>
+
+              <div className="pt-2">
+                <button
+                  disabled={submitting}
+                  className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 disabled:bg-emerald-400 text-white px-6 py-3 rounded-xl font-bold transition shadow-lg shadow-emerald-600/20 active:scale-[0.98]"
+                >
+                  {submitting ? t.sending : t.sendFeedback}
+                </button>
+              </div>
+            </form>
+          </motion.div>
         </div>
       </section>
     </main>

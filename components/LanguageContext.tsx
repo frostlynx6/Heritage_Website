@@ -72,6 +72,21 @@ export const translations = {
     invalidCreds: "Invalid email or password.",
     unexpectedError: "An unexpected error occurred.",
     somethingWrong: "Something went wrong.",
+
+    // Feedback form
+    feedbackTitle: "We'd love your feedback",
+    feedbackDesc: "Tell us how we can improve your experience.",
+    nameLabel: "Name",
+    namePlaceholder: "Your name",
+    emailLabel: "Email",
+    emailPlaceholder: "you@example.com",
+    messageLabel: "Feedback",
+    messagePlaceholder: "Share your thoughts (max 500 characters)",
+    sendFeedback: "Send Feedback",
+    sending: "Sending...",
+    charsLeft: "left",
+    feedbackSuccess: "Thanks for your feedback!",
+    feedbackError: "Couldn't send feedback. Please try again.",
   },
   ZH: {
     navHome: "首页",
@@ -143,6 +158,21 @@ export const translations = {
     invalidCreds: "邮箱或密码错误。",
     unexpectedError: "发生未知错误。",
     somethingWrong: "出错了。",
+
+    // Feedback form
+    feedbackTitle: "我们期待你的反馈",
+    feedbackDesc: "告诉我们如何改进你的体验。",
+    nameLabel: "姓名",
+    namePlaceholder: "你的名字",
+    emailLabel: "电子邮箱",
+    emailPlaceholder: "you@example.com",
+    messageLabel: "反馈内容",
+    messagePlaceholder: "分享你的想法（最多 500 字）",
+    sendFeedback: "发送反馈",
+    sending: "发送中...",
+    charsLeft: "剩余",
+    feedbackSuccess: "感谢你的反馈！",
+    feedbackError: "发送失败，请稍后再试。",
   }
 };
 
