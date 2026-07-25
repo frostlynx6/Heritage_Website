@@ -33,7 +33,6 @@ const adapter = new PrismaMariaDb({
   connectionLimit: 1,
   acquireTimeout: 10000,
   connectTimeout: 10000,
-  socketTimeout: 15000,
   keepAliveInitialDelay: 10000,
 });
 
