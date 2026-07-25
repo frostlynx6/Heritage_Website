@@ -27,7 +27,7 @@ export default function Navbar() {
       <nav className="flex justify-between items-center p-6 bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100">
         <div className="flex items-center gap-8">
           <Link className="text-2xl font-bold tracking-tighter text-emerald-900" href="/">
-            Heritage.surf
+            Heritage
           </Link>
           <div className="hidden md:flex gap-6 text-sm font-medium text-gray-600">
             <Link className="hover:text-emerald-600 transition" href="/">{t.navHome}</Link>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   MapPin, 
@@ -12,6 +12,8 @@ import {
   Compass, 
   Award 
 } from "lucide-react";
+import { useSession } from "next-auth/react";
+import AuthModal from "../../components/AuthModal";
 
 interface Trip {
   id: string;
@@ -135,18 +137,52 @@ export default function AvailableTrips() {
   
   // Track attended trip IDs in state
   const [attendedIds, setAttendedIds] = useState<string[]>([]);
+  const { data: session } = useSession();
+  const [showAuth, setShowAuth] = useState(false);
+
+  // Load attended trips for logged-in user
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      if (!session?.user) return;
+      try {
+        const res = await fetch("/api/attendance", { cache: "no-store" });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!cancelled) {
+          setAttendedIds((data.attended as { tripId: string }[]).map((b) => b.tripId));
+        }
+      } catch {}
+    }
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [session?.user]);
 
   // Filter trips based on selected tab
   const filteredTrips = selectedCategory === "All" 
     ? ALL_TRIPS 
     : ALL_TRIPS.filter(t => t.category === selectedCategory);
 
-  const toggleAttended = (tripId: string) => {
-    setAttendedIds(prev => 
-      prev.includes(tripId) 
-        ? prev.filter(id => id !== tripId) 
-        : [...prev, tripId]
-    );
+  const toggleAttended = async (tripId: string) => {
+    if (!session?.user) {
+      setShowAuth(true);
+      return;
+    }
+    const isAlready = attendedIds.includes(tripId);
+    try {
+      const res = await fetch("/api/attendance", {
+        method: isAlready ? "DELETE" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tripId }),
+      });
+      if (res.ok) {
+        setAttendedIds((prev) =>
+          isAlready ? prev.filter((id) => id !== tripId) : [...prev, tripId]
+        );
+      }
+    } catch {}
   };
 
   return (
@@ -211,7 +247,7 @@ export default function AvailableTrips() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 whileHover={{ y: -6 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.35, ease: "easeOut" }}
                 onClick={() => setActiveTrip(trip)}
                 className="bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col group relative"
               >
@@ -220,7 +256,7 @@ export default function AvailableTrips() {
                   <img
                     src={trip.image}
                     alt={trip.name}
-                    className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
                   
@@ -282,7 +318,7 @@ export default function AvailableTrips() {
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                transition={{ type: "spring", duration: 0.5 }}
+                transition={{ type: "spring", duration: 0.5, bounce: 0.25 }}
                 className="relative bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl z-10 my-8 border border-slate-100"
               >
                 {/* Close Button */}
@@ -351,9 +387,11 @@ export default function AvailableTrips() {
                       }`}
                     >
                       <CheckCircle className="w-5 h-5" />
-                      {attendedIds.includes(activeTrip.id)
-                        ? "Marked as Attended (Click to Undo)"
-                        : "Mark as Attended"}
+                      {session?.user
+                        ? attendedIds.includes(activeTrip.id)
+                          ? "Marked as Attended (Click to Undo)"
+                          : "Mark as Attended"
+                        : "Log in to mark as attended"}
                     </button>
                   </div>
                 </div>
@@ -361,6 +399,8 @@ export default function AvailableTrips() {
             </div>
           )}
         </AnimatePresence>
+        {/* Auth popup for gating actions when logged out */}
+        <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
       </div>
     </div>
   );

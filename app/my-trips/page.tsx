@@ -1,9 +1,11 @@
 "use client";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Award, Lock, CheckCircle2 } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 // All 10 badges matching your available trips, defaulting to 0 earned.
-const BADGES = [
+const ALL_BADGES = [
   { id: "sungei-buloh", name: "Sungei Buloh", earned: false, date: "", icon: "🦅" },
   { id: "rail-corridor", name: "Rail Corridor", earned: false, date: "", icon: "🛤️" },
   { id: "bukit-timah", name: "Bukit Timah", earned: false, date: "", icon: "⛰️" },
@@ -17,7 +19,42 @@ const BADGES = [
 ];
 
 export default function MyTrips() {
-  const earnedCount = BADGES.filter(b => b.earned).length;
+  const { data: session } = useSession();
+  const [attended, setAttended] = useState<{ tripId: string; earnedAt: string }[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      if (!session?.user) {
+        setAttended([]);
+        return;
+      }
+      try {
+        const res = await fetch("/api/attendance", { cache: "no-store" });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!cancelled) setAttended(data.attended ?? []);
+      } catch {}
+    }
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [session?.user]);
+
+  const BADGES = useMemo(() => {
+    const earnedMap = new Map(attended.map((a) => [a.tripId, a.earnedAt]));
+    return ALL_BADGES.map((b) => {
+      const date = earnedMap.get(b.id);
+      return {
+        ...b,
+        earned: Boolean(date),
+        date: date ? new Date(date).toLocaleDateString() : "",
+      };
+    });
+  }, [attended]);
+
+  const earnedCount = BADGES.filter((b) => b.earned).length;
 
   return (
     <div className="min-h-screen bg-slate-50 p-6 lg:p-10">
@@ -34,7 +71,7 @@ export default function MyTrips() {
             {/* Simple Progress Bar */}
             <div className="w-full max-w-md h-3 bg-slate-100 rounded-full mt-4 overflow-hidden">
               <div 
-                className="h-full bg-emerald-500 transition-all duration-1000 ease-out"
+                className="h-full bg-emerald-500 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
                 style={{ width: `${(earnedCount / BADGES.length) * 100}%` }}
               />
             </div>
