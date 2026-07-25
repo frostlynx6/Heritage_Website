@@ -2,8 +2,10 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Compass, Award, Map } from "lucide-react";
+import { useLanguage } from "../components/LanguageContext";
 
 export default function Home() {
+  const { t } = useLanguage();
   return (
     <main className="flex-1 flex flex-col">
       {/* Hero Section */}
@@ -24,8 +26,8 @@ export default function Home() {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-lg"
           >
-            Discover Singapore's <br/>
-            <span className="text-emerald-400">Living Heritage</span>
+            {t.heroTitle1} <br/>
+            <span className="text-emerald-400">{t.heroTitle2}</span>
           </motion.h1>
           
           <motion.p 
@@ -34,7 +36,7 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
             className="text-lg md:text-2xl text-gray-200 mb-10 font-light drop-shadow-md max-w-2xl mx-auto"
           >
-            Embark on curated trails, collect exclusive badges, and uncover the hidden stories behind the Lion City.
+            {t.heroDesc}
           </motion.p>
           
           <motion.div
@@ -47,7 +49,7 @@ export default function Home() {
               className="bg-emerald-600 hover:bg-emerald-500 text-white px-8 py-4 rounded-full text-lg font-medium transition-all duration-300 shadow-[0_0_20px_rgba(5,150,105,0.4)] hover:shadow-[0_0_30px_rgba(5,150,105,0.6)] inline-flex items-center gap-2"
             >
               <Compass className="w-5 h-5" />
-              Start Exploring
+              {t.startExploring}
             </Link>
           </motion.div>
         </div>
@@ -59,19 +61,19 @@ export default function Home() {
           {[
             {
               icon: <Map className="w-8 h-8 text-emerald-700" />,
-              title: "Curated Trails",
-              desc: "From the lush Rail Corridor to the historic shores of Pulau Ubin, explore handpicked routes."
+              title: t.featureTrailsTitle,
+              desc: t.featureTrailsDesc,
             },
             {
               icon: <Award className="w-8 h-8 text-emerald-700" />,
-              title: "Earn Badges",
-              desc: "Check in at iconic landmarks to unlock unique digital badges and build your heritage passport."
+              title: t.featureBadgesTitle,
+              desc: t.featureBadgesDesc,
             },
             {
               icon: <Compass className="w-8 h-8 text-emerald-700" />,
-              title: "Deep Insights",
-              desc: "Learn the rich history, culture, and architecture that shaped modern Singapore."
-            }
+              title: t.featureInsightsTitle,
+              desc: t.featureInsightsDesc,
+            },
           ].map((feature, i) => (
             <motion.div 
               key={i}

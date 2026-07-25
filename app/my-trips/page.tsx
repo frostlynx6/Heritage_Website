@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Award, Lock, CheckCircle2 } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useLanguage } from "../../components/LanguageContext";
 
 // All 10 badges matching your available trips, defaulting to 0 earned.
 const ALL_BADGES = [
@@ -19,6 +20,7 @@ const ALL_BADGES = [
 ];
 
 export default function MyTrips() {
+  const { t } = useLanguage();
   const { data: session } = useSession();
   const [attended, setAttended] = useState<{ tripId: string; earnedAt: string }[]>([]);
 
@@ -63,9 +65,9 @@ export default function MyTrips() {
         {/* Header & Progress */}
         <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200/80 mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <h1 className="text-4xl font-extrabold text-slate-900 mb-2 tracking-tight">My Explorer Passport</h1>
+            <h1 className="text-4xl font-extrabold text-slate-900 mb-2 tracking-tight">{t.myPassportTitle}</h1>
             <p className="text-slate-500 text-lg">
-              You have unlocked <strong className="text-slate-900">{earnedCount}</strong> out of <strong className="text-slate-900">{BADGES.length}</strong> badges.
+              {t.unlockedSummaryPrefix} <strong className="text-slate-900">{earnedCount}</strong> {t.unlockedSummaryOutOf} <strong className="text-slate-900">{BADGES.length}</strong> {t.badgesWord}
             </p>
             
             {/* Simple Progress Bar */}
@@ -112,11 +114,11 @@ export default function MyTrips() {
               
               {badge.earned ? (
                 <p className="text-xs text-emerald-700 font-bold bg-emerald-100 px-3 py-1 rounded-full mt-3">
-                  Earned {badge.date}
+                  {t.earnedLabel} {badge.date}
                 </p>
               ) : (
                 <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 mt-3 bg-slate-200/70 px-3 py-1 rounded-full">
-                  <Lock className="w-3.5 h-3.5" /> Locked
+                  <Lock className="w-3.5 h-3.5" /> {t.lockedLabel}
                 </div>
               )}
             </motion.div>

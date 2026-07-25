@@ -1,13 +1,15 @@
 "use client";
 import { Map, Train, Info as InfoIcon } from "lucide-react";
+import { useLanguage } from "../../components/LanguageContext";
 
 export default function Information() {
+  const { t } = useLanguage();
   return (
     <div className="min-h-screen bg-gray-50 p-10">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold text-gray-900 mb-8 flex items-center gap-3">
           <InfoIcon className="w-10 h-10 text-emerald-600" />
-          Visitor Information
+          {t.visitorInfoTitle}
         </h1>
         
         <div className="grid md:grid-cols-2 gap-8">
@@ -16,7 +18,7 @@ export default function Information() {
           <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
             <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
               <Map className="w-6 h-6 text-emerald-600" />
-              Singapore Overview Map
+              {t.overviewMapTitle}
             </h2>
             <div className="rounded-2xl overflow-hidden bg-gray-100">
               <img 
@@ -26,7 +28,7 @@ export default function Information() {
               />
             </div>
             <p className="text-gray-500 text-sm mt-4">
-              Singapore is an island city-state located at the southern tip of the Malay Peninsula. Most heritage sites are accessible within a 45-minute drive.
+              {t.overviewMapDesc}
             </p>
           </div>
 
@@ -34,7 +36,7 @@ export default function Information() {
           <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
             <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
               <Train className="w-6 h-6 text-emerald-600" />
-              MRT System Map
+              {t.mrtMapTitle}
             </h2>
             <div className="rounded-2xl overflow-hidden bg-gray-100">
               <img 
@@ -44,7 +46,7 @@ export default function Information() {
               />
             </div>
             <p className="text-gray-500 text-sm mt-4">
-              The Mass Rapid Transit (MRT) is the fastest way to get around. You can tap your standard Visa/Mastercard directly at the gantries to pay for rides.
+              {t.mrtMapDesc}
             </p>
           </div>
 

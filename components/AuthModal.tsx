@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Mail, Lock, User, ArrowRight, Loader2 } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "./LanguageContext";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ interface AuthModalProps {
 
 export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const router = useRouter();
+  const { t } = useLanguage();
   
   // State to toggle between Login and Sign Up
   const [isLogin, setIsLogin] = useState(true);
@@ -40,7 +42,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         });
 
         if (res?.error) {
-          setError("Invalid email or password.");
+          setError(t.invalidCreds);
         } else {
           // Success! Refresh page to update the Navbar and close modal
           router.refresh();
@@ -56,7 +58,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
         if (!res.ok) {
           const data = await res.json();
-          setError(data.error || "Something went wrong.");
+          setError(data.error || t.somethingWrong);
         } else {
           // Success! Automatically log them in after signing up
           await signIn("credentials", {
@@ -69,7 +71,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         }
       }
     } catch (err) {
-      setError("An unexpected error occurred.");
+      setError(t.unexpectedError);
     } finally {
       setIsLoading(false);
     }
@@ -103,12 +105,10 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             <div className="p-8 sm:p-10">
               <div className="text-center mb-8">
                 <h2 className="text-3xl font-bold text-slate-900 tracking-tight">
-                  {isLogin ? "Welcome Back" : "Create Account"}
+                  {isLogin ? t.welcomeBack : t.createAccount}
                 </h2>
                 <p className="text-slate-500 mt-2 text-sm">
-                  {isLogin 
-                    ? "Enter your details to access your heritage passport." 
-                    : "Join us to start collecting badges across Singapore."}
+                  {isLogin ? t.loginDesc : t.signupDesc}
                 </p>
               </div>
 
@@ -123,9 +123,9 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 {!isLogin && (
                   <div className="relative">
                     <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                    <input 
+                      <input 
                       type="text" 
-                      placeholder="Full Name" 
+                      placeholder={t.fullName}
                       required
                       value={name}
                       onChange={(e) => setName(e.target.value)}
@@ -138,7 +138,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                   <input 
                     type="email" 
-                    placeholder="Email Address" 
+                    placeholder={t.email}
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -150,7 +150,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                   <input 
                     type="password" 
-                    placeholder="Password" 
+                    placeholder={t.password}
                     required
                     minLength={6}
                     value={password}
@@ -167,7 +167,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     <Loader2 className="w-5 h-5 animate-spin" />
                   ) : (
                     <>
-                      {isLogin ? "Log In" : "Sign Up"}
+                      {isLogin ? t.login : t.signup}
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
@@ -176,7 +176,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
               <div className="mt-8 text-center">
                 <p className="text-sm text-slate-500">
-                  {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+                  {isLogin ? t.noAccount : t.haveAccount}{" "}
                   <button 
                     onClick={() => {
                       setIsLogin(!isLogin);
@@ -184,7 +184,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     }}
                     className="text-emerald-600 font-bold hover:text-emerald-700 transition-colors"
                   >
-                    {isLogin ? "Sign up here" : "Log in here"}
+                    {isLogin ? t.switchToSignup : t.switchToLogin}
                   </button>
                 </p>
               </div>
