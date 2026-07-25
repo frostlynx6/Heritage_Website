@@ -32,7 +32,8 @@ export default function SingaporeMapPage() {
   useEffect(() => {
     let destroyed = false;
     async function init() {
-      const L = await import("leaflet");
+      const mod = await import("leaflet");
+      const L: any = (mod as any).default ?? mod;
       if (destroyed || !mapEl.current || mapRef.current) return;
       const center: [number, number] = [1.3521, 103.8198];
       const map = L.map(mapEl.current).setView(center, 11);
