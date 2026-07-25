@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   MapPin, 
@@ -15,6 +15,7 @@ import {
 import { useSession } from "next-auth/react";
 import AuthModal from "../../components/AuthModal";
 import { useLanguage } from "../../components/LanguageContext";
+import { useBadges } from "../../components/BadgesContext";
 
 type Lang = "EN" | "ZH";
 
@@ -158,30 +159,9 @@ export default function AvailableTrips() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [activeTrip, setActiveTrip] = useState<Trip | null>(null);
   
-  // Track attended trip IDs in state
-  const [attendedIds, setAttendedIds] = useState<string[]>([]);
   const { data: session } = useSession();
   const [showAuth, setShowAuth] = useState(false);
-
-  // Load attended trips for logged-in user
-  useEffect(() => {
-    let cancelled = false;
-    async function load() {
-      if (!session?.user) return;
-      try {
-        const res = await fetch("/api/attendance", { cache: "no-store" });
-        if (!res.ok) return;
-        const data = await res.json();
-        if (!cancelled) {
-          setAttendedIds((data.attended as { tripId: string }[]).map((b) => b.tripId));
-        }
-      } catch {}
-    }
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, [session?.user]);
+  const { attendedIds, toggle } = useBadges();
 
   // Filter trips based on selected tab
   const filteredTrips = selectedCategory === "All" 
@@ -193,19 +173,7 @@ export default function AvailableTrips() {
       setShowAuth(true);
       return;
     }
-    const isAlready = attendedIds.includes(tripId);
-    try {
-      const res = await fetch("/api/attendance", {
-        method: isAlready ? "DELETE" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tripId }),
-      });
-      if (res.ok) {
-        setAttendedIds((prev) =>
-          isAlready ? prev.filter((id) => id !== tripId) : [...prev, tripId]
-        );
-      }
-    } catch {}
+    await toggle(tripId);
   };
 
   return (

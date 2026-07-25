@@ -1,9 +1,9 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { Award, Lock, CheckCircle2 } from "lucide-react";
-import { useSession } from "next-auth/react";
 import { useLanguage } from "../../components/LanguageContext";
+import { useBadges } from "../../components/BadgesContext";
 
 // All 10 badges matching your available trips, defaulting to 0 earned.
 const ALL_BADGES = [
@@ -21,28 +21,7 @@ const ALL_BADGES = [
 
 export default function MyTrips() {
   const { t } = useLanguage();
-  const { data: session } = useSession();
-  const [attended, setAttended] = useState<{ tripId: string; earnedAt: string }[]>([]);
-
-  useEffect(() => {
-    let cancelled = false;
-    async function load() {
-      if (!session?.user) {
-        setAttended([]);
-        return;
-      }
-      try {
-        const res = await fetch("/api/attendance", { cache: "no-store" });
-        if (!res.ok) return;
-        const data = await res.json();
-        if (!cancelled) setAttended(data.attended ?? []);
-      } catch {}
-    }
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, [session?.user]);
+  const { attended } = useBadges();
 
   const BADGES = useMemo(() => {
     const earnedMap = new Map(attended.map((a) => [a.tripId, a.earnedAt]));
