@@ -36,11 +36,16 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ message: "Account created!" }, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
       return NextResponse.json({ error: "Email already exists." }, { status: 409 });
     }
+    // Common setup issues: missing DATABASE_URL or missing tables
+    const isDev = process.env.NODE_ENV !== 'production';
+    const hint = isDev
+      ? "Check DATABASE_URL and run `npx prisma db push` to create tables."
+      : undefined;
     console.error("Register error:", error);
-    return NextResponse.json({ error: "Unable to create account." }, { status: 500 });
+    return NextResponse.json({ error: "Unable to create account.", hint, detail: isDev ? String(error?.message ?? error) : undefined }, { status: 500 });
   }
 }
