@@ -34,7 +34,6 @@ const adapter = new PrismaMariaDb({
   acquireTimeout: 10000,
   connectTimeout: 10000,
   socketTimeout: 15000,
-  enableKeepAlive: true,
   keepAliveInitialDelay: 10000,
 });
 
